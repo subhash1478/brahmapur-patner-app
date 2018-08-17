@@ -1,0 +1,175 @@
+page-login {
+  $transparent-white: rgba(255, 255, 255, .6);
+ // This is just to make the header transparent and button/icon with white color
+ .toolbar-content,
+ span {
+   color: white;
+ }
+ .toolbar-background,
+ ion-navbar,
+ ion-header {
+   background: transparent !important;
+   background-color: transparent !important;
+ }
+ .header-md::after,
+ .toolbar-background-ios {
+   background-image: none;
+   border-bottom: 0;
+ }
+ ion-content .scroll-content {
+    background-color: transparent;
+}
+ // Footer
+ ion-footer {
+   height: 47px;
+ }
+ .footer {
+   text-align: center;
+   background: rgba(255, 255, 255, .06);
+   min-height: 47px;
+ }
+ .footer-md::before {
+   border-top: 1px solid $transparent-white;
+   background-image: none;
+ }
+ // Fullscreen animated rainbow gradient
+ ion-content.content-ios,
+ ion-content.content-md{
+   background: #2196f3;
+ }
+
+ // Content
+ .scroll-content {
+   display: flex;
+   flex-direction: column;
+ }
+ .logo {
+   width: 25%;
+   height: auto;
+   margin: 0 auto;
+   padding-top: 40px;
+ }
+ // Input items
+ ion-item {
+   border-radius: 0 !important;
+   padding-left: 16px !important;
+   margin-bottom: 0 !important;
+   margin-bottom: 10px;
+   color: #fff !important;
+   background-color: transparent !important;
+ }
+ .item .label{
+   font-size: 15px;
+   font-weight: 400;
+ }
+  ::-webkit-input-placeholder {
+   color: white !important;
+ }
+ .item-inner {
+   border-bottom: 0 !important;
+   box-shadow: none !important;
+ }
+ // --
+ .login-button {
+   text-transform: none;
+   @include border-radius(40px);
+   background-color: #00579c;
+   border: 0;
+ }
+ .mrt10{
+  margin-top: 16px;
+ }
+ .frgt-txt{
+   display: inline-block;
+   margin-top: 14px;
+   margin-bottom: 3px;
+   font-size: 14px;
+ }
+ // Facebook icon
+ ion-icon {
+   padding-right: 10px;
+   font-size: 2.2rem;
+ }
+ // HR with text in the middle effect
+ .strike {
+   display: block;
+   text-align: center;
+   white-space: nowrap;
+ }
+ .strike>span {
+   position: relative;
+   display: inline-block;
+   font-weight: bold;
+ }
+ .strike>span:before,
+ .strike>span:after {
+   content: "";
+   position: absolute;
+   top: 50%;
+   width: 9999px;
+   height: 1px;
+   background: $transparent-white;
+ }
+ .strike>span:before {
+   right: 100%;
+   margin-right: 15px;
+ }
+ .strike>span:after {
+   left: 100%;
+   margin-left: 15px;
+ }
+ .text-input{
+  border: 0;
+  height: auto;
+  margin:0;
+  color: #fff;
+  font-family: $font-stack1;
+  width:100%;
+  background-color:transparent;
+  text-align: left;
+  font-size: 15px;
+  font-weight: 400;
+}
+.text-input:focus {
+  outline: 0;
+}
+.text-input::-moz-placeholder {
+  color: #fff;
+  opacity: 1;
+}
+.text-input:-ms-input-placeholder {
+  color: #fff;
+}
+.text-input::-webkit-input-placeholder {
+  color: #fff;
+}
+.item{
+  background:transparent;
+  border-bottom:1px solid rgba(255, 255, 255, 0.7);
+  padding-left: 0;
+  position: relative;
+}
+.item:after{
+  content: '';
+  background-color: rgba(255, 255, 255, 0.7);
+  width: 1px;
+  height: 10px;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+}
+.item:before{
+  content: '';
+  background-color: rgba(255, 255, 255, 0.7);
+  width: 1px;
+  height: 10px;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+}
+
+
+
+
+
+}

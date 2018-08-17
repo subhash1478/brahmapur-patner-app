@@ -1,0 +1,7 @@
+{
+  "name": "brahmapur patner app",
+  "integrations": {
+    "cordova": {}
+  },
+  "type": "ionic-angular"
+}

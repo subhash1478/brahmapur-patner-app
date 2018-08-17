@@ -1,0 +1,224 @@
+// http://ionicframework.com/docs/theming/
+
+
+// App Global Sass
+// --------------------------------------------------
+// Put style rules here that you want to apply globally. These
+// styles are for the entire app and not just one component.
+// Additionally, this file can be also used as an entry point
+// to import other Sass files to be included in the output CSS.
+//
+// Shared Sass variables, which can be used to adjust Ionic's
+// default Sass variables, belong in "theme/variables.scss".
+//
+// To declare rules for a specific mode, create a child rule
+// for the .md, .ios, or .wp mode classes. The mode class is
+// automatically applied to the <body> element in the app.
+
+@import url('https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700');
+
+  
+$font-stack1: 'Open Sans', sans-serif;
+$primary-color:#f8f8f8;
+
+@mixin border-radius($radius) {
+  -webkit-border-radius: $radius;
+     -moz-border-radius: $radius;
+      -ms-border-radius: $radius;
+          border-radius: $radius;
+}
+@mixin box-shadow($shadow) {
+    -webkit-box-shadow: $shadow;
+    -moz-box-shadow: $shadow;
+    box-shadow:$shadow;
+}
+body{
+    font-family: $font-stack1;
+}
+h1, h2, h3, h4, h5, h6{
+    font-family: $font-stack1;
+    margin: 0;
+    padding: 0;
+    font-weight:600;
+}
+a{
+   text-decoration: none;
+} 
+ul{
+    margin: 0;
+    padding: 0;  
+    list-style: none;
+}
+.clr:after,
+.clr:before{
+    display: table;
+    content: '';
+}
+.clr:after{
+   clear: both;
+}
+img{
+    vertical-align: middle;
+}
+p {
+    font-family: $font-stack1;
+    margin: 0;
+    padding: 0;
+}
+
+.bar-button-menutoggle-md ion-icon,
+.bar-button-menutoggle-ios ion-icon {
+    color: #fff;
+}
+.header .toolbar-title{
+    font-family: $font-stack1;
+    color: #fff;
+    text-align:center;
+    font-weight: 400;
+    font-size: 16px;
+    text-transform: capitalize;
+}
+.bar-button-ios[icon-only] ion-icon{
+    font-size: 24px;
+    margin:0 3px;
+}
+// .header .toolbar-ios ion-title{  padding: 0 10px 1px;}
+.header-ios .toolbar-background-ios,
+.header-md .toolbar-background-md{
+    border-color: none;
+    background-color: #2196f3;
+    border: 0;
+}
+.header .back-button-icon-md,
+.header .back-button-icon-ios {
+    color: #fff;
+}
+.bar-button-ios, 
+.bar-button-md{color: #fff;}
+.menu-inner .content-md, 
+.menu-inner .content-ios{
+    background:url('../assets/imgs/menu-bg.png') #00579c left center no-repeat;
+    background-size: contain;
+}
+.menu-inner .item-md, 
+.menu-inner .item-ios{
+    background-color:transparent; 
+    color: #fff;
+    font-family: $font-stack1;
+    font-weight: 400;
+    font-size: 14px;
+    border-bottom: 1px solid #3178af; 
+}
+.menu-inner .list-md .item-block .item-inner, 
+.menu-inner .list-ios .item-block .item-inner{
+    border-bottom: 0; 
+}
+.menu-inner .list-md .label, 
+.menu-inner .list-ios .item-block .label{
+    margin: 0;
+}
+.menu-inner .toolbar-title-md, 
+.menu-inner .toolbar-title-ios{
+    text-align: left;
+}
+.menu-inner .toolbar-background-md, 
+.menu-inner .toolbar-background-ios {
+    background: #2196f3;
+}
+.menu-inner .list-ios > .item-block:last-child, 
+.list-ios > .menu-inner .item-wrapper:last-child .item-block {
+    border-bottom: 0;
+}
+.scroll-content {
+    padding-bottom: 0 !important;
+}
+ion-content .scroll-content {
+    background-color: transparent !important;
+}
+.menu-inner button.item-ios:not([detail-none]) .item-inner{
+    background-image: none;
+}
+.menu-inner .list-ios > .item-block:first-child {
+     border-top: 0;
+}
+.menu-inner .item-md .icon, 
+.menu-inner .item-ios .icon{
+   font-size: 22px;
+   vertical-align: middle;
+   margin-right: 3px;
+   width: 20px;
+}
+.btn-closeM{
+    position: absolute;
+    right: -46px;
+    top: 0;
+    z-index: 9;
+    margin: 0;
+    background-color: #005190!important;
+    color: #fff!important;
+    @include border-radius(0);
+    height: 52px;
+}
+.menu-inner{
+    contain: initial;
+}
+.profile-imgB{
+    background-color: rgba(33, 145, 243, 0.2);
+    padding:20px 16px;
+    margin-bottom: 16px;
+}
+.profile_imgoutline{
+    height: 90px;
+    width: 90px;
+    margin: auto;
+    @include border-radius(50%);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 5px;
+}
+.profile_img_side {
+    height: 78px;
+    width: 78px;
+    margin: auto;
+    @include border-radius(50%);
+}
+.nm-tilte{
+    color: #fff;
+    font-size: 15px;
+    margin-top: 11px;
+    margin-bottom: 4px;
+}
+.nm-eml{
+    color: #fff;
+    font-size: 13px;
+}
+
+.button-md:hover:not(.disable-hover) {
+    background-color: transparent;
+    color: inherit;
+}
+.button-md.activated, .button-ios.activated{
+    background-color: transparent;
+    color: inherit;
+}
+.alert-ios .alert-button{
+    color: #2196f3;
+    font-size: 15px;
+}
+
+@media only screen and (min-width: 320px) {
+
+    
+}
+
+/* Media Screen Devices, Phones */ 
+@media screen and (min-width: 768px){ 
+        
+        
+       
+}
+    
+/* Extra Small Devices, Phones */ 
+@media only screen and (max-width : 767px) {
+   
+
+}

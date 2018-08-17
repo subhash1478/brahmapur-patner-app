@@ -1,0 +1,28 @@
+<!--
+  Generated template for the ProductPage page.
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+  <ion-navbar>
+    <ion-title>product</ion-title>
+    <ion-buttons end>
+      <button (click)="goToCart()" ion-button icon-only >
+         {{qty}}  <ion-icon name="cart"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+
+  
+</ion-header>
+<ion-content padding>
+  <ion-list  >
+    <ion-item *ngFor="let item of prodcuctList" (click)="addToCart(item)">
+      <h2>{{item.title}}</h2>
+      <p>Price :  {{item.price| currency:'INR':true }}</p>
+      <button ion-button clear item-right  ><ion-icon name="ios-cart"> Add</ion-icon></button>
+    </ion-item>
+  </ion-list> 
+</ion-content><ion-footer>
+  <button ion-button block (click)="goToCart()">Cart</button>
+</ion-footer>
