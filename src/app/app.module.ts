@@ -11,7 +11,8 @@ import { UtilityProvider } from '../providers/utility/utility';
 import { HttpClientModule } from '@angular/common/http';
 import { Toast } from '@ionic-native/toast';
 import { Geolocation } from '@ionic-native/geolocation';
-  
+import { OneSignal } from '@ionic-native/onesignal';
+
 @NgModule({
   declarations: [
     MyApp,
@@ -26,7 +27,7 @@ import { Geolocation } from '@ionic-native/geolocation';
     MyApp,
  
   ],
-  providers: [
+  providers: [OneSignal,
     StatusBar,ServicesProvider,UtilityProvider,Toast,Geolocation,
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler}

@@ -1,43 +1,90 @@
 import { Component, ViewChild } from '@angular/core';
-import { Nav, Platform } from 'ionic-angular';
-import { StatusBar } from '@ionic-native/status-bar';
-import { SplashScreen } from '@ionic-native/splash-screen';
- 
+import { Platform, Ion, IonicPage ,NavController, Nav} from 'ionic-angular';
+import { ServicesProvider } from '../providers/services/services';
+import { Events } from 'ionic-angular'; 
+ import { OneSignal } from '@ionic-native/onesignal';
 
+import { enableProdMode } from '@angular/core';
+ enableProdMode();
 @Component({
   templateUrl: 'app.html'
 })
 export class MyApp {
   @ViewChild(Nav) nav: Nav;
+  user:any={}
+  rootPage: string;
+   constructor(platform: Platform,  public events: Events,
+     private oneSignal: OneSignal,
+    public _services: ServicesProvider) {
+      
 
-  rootPage: any = "LoginPage";
+      platform.ready().then(() => {
+ 
+          this.oneSignal.startInit("58028d01-d059-4cf1-b6c6-0d99812dfe24", "977511232376")
 
-  pages: Array<{title: string, component: any}>;
 
-  constructor(public platform: Platform, public statusBar: StatusBar, public splashScreen: SplashScreen) {
-    this.initializeApp();
+        this.oneSignal.inFocusDisplaying(this.oneSignal.OSInFocusDisplayOption.Notification);
+        
+        this.oneSignal.enableVibrate(true)
+        this.oneSignal.enableSound(true)
+         this.oneSignal.handleNotificationReceived().subscribe(() => {
+         // do something when notification is received
+        });
+        
+        this.oneSignal.handleNotificationOpened().subscribe(() => {
+          // do something when a notification is opened
+        });
 
-    // used for an example of ngFor and navigation
-    this.pages = [
-      { title: 'Home', component: "HomePage" },
-      { title: 'My Order', component: "MyOrderPage" },
-      { title: 'My Product', component: "ProductPage" }
-    ];
+        this.oneSignal.getIds().then(function(data){
+          console.log(data);
 
+         localStorage.setItem('devices_token',data.userId)
+          
+        })
+        
+        this.oneSignal.endInit();
+    
+       
+
+        let logincheck = localStorage.getItem('token')
+        this._services.getGeolocation();
+        var checkApptour = localStorage.getItem('apptour')
+        if (checkApptour == 'seen' && logincheck != null) {
+          this.rootPage = "DashboardPage";
+        }
+        else {
+          this.rootPage = "LoginPage";
+        }
+      });
+
+      events.subscribe('userdetails', () => {
+        // user and time are the same arguments passed in `events.publish(user, time)`
+        this.ionViewDidEnter();
+      });
+    }
+    ionViewDidEnter(){
+      console.log('ngAfterViewInit')
+      if(localStorage.getItem('userdetails')!=null){
+        let userdata=JSON.parse(localStorage.getItem('userdetails'))
+        this.user=userdata;
+      }
+
+    }
+    goToPage(page){
+      
+     this.nav.push(page);
+    }
+
+    CmsPage(page){
+      console.log(page);
+      
+  this.nav.push("CmsPage",{pagename:page})
+    }
+    logout() {
+      localStorage.removeItem('userdetails')
+      localStorage.removeItem('token')
+      this.nav.setRoot("LoginPage");
+    }
+   
   }
-
-  initializeApp() {
-    this.platform.ready().then(() => {
-      // Okay, so the platform is ready and our plugins are available.
-      // Here you can do any higher level native things you might need.
-      this.statusBar.styleDefault();
-      this.splashScreen.hide();
-    });
-  }
-
-  openPage(page) {
-    // Reset the content nav to have just this page
-    // we wouldn't want the back button to show in this scenario
-    this.nav.setRoot(page.component);
-  }
-}
+  

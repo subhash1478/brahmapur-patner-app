@@ -283,11 +283,26 @@ getDriverOrderList(data){
   .map((response:Response)=>response)
   .catch(this.handleError)
 }
+getNewOrder(data){
+  return this.http.get(`${Config.SAIL_ENDPOINT}/get-new-order?id=${data.id}&type=${data.type}&&status=${data.status}`)
+  .map((response:Response)=>response)
+  .catch(this.handleError)
+}
+getUserShop(data){
+  return this.http.get(`${Config.SAIL_ENDPOINT}/get-user-shop?id=${data.id}`)
+  .map((response:Response)=>response)
+  .catch(this.handleError)
+}
 
- 
 
 task(data){
   return this.http.post(`${Config.SAIL_ENDPOINT}/task`,data)
+  .map((response:Response)=>response)
+  .catch(this.handleError)
+}
+
+saveDevicesToken(data){
+  return this.http.post(`${Config.SAIL_ENDPOINT}/add-devices`,data)
   .map((response:Response)=>response)
   .catch(this.handleError)
 }

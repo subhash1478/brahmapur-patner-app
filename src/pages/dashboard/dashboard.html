@@ -7,26 +7,15 @@
     </ion-navbar>
 </ion-header>
 <ion-content  >
-    <div class="radial-progress" data-progress="0">
-        <div class="circle">
-            <div class="mask full" [style.transform]="transform">
-                <div class="fill" [style.transform]="transform"></div>
-            </div>
-            <div class="mask half">
-                <div class="fill" [style.transform]="transform"></div>
-                <div class="fill fix" [style.transform]="fixTransform"></div>
-            </div>
-            <div class="shadow"></div>
-        </div>
-        <div class="inset">
-            <div class="percentage">{{timer.displayTime}}</div>
-        </div>
-    </div>
+ 
     <ion-list>
+        
+            
         <h1 text-center>    {{error_message}}
             </h1>
         <div   *ngFor="let item of productList;let i =index">
-            <ion-item>
+        
+            <ion-item *ngIf="item.order.shop_accept==0">
                 <h2>Order By
                     {{item.order.userid.firstname}} {{item.order.userid.lastname}}</h2>
                     <h2>Shop {{item.order.shopid.title}}</h2>
@@ -40,36 +29,18 @@
                     </ion-row>
                     <div class="total-dtls"  text-right >
                         <p class="ttprice">  Total {{item.order.totalprice|currency:'INR'}}</p>
-                    </div>{{item.order.id}}
-                    <ion-row *ngIf="item.order.driver_accept==0">
+                    </div> 
+                    <ion-row *ngIf="item.order.shop_accept==0">
                         <ion-col>
                             <button ion-button block color="danger" (click)="orderAccept('reject')">Reject</button>
                         </ion-col>
                         <ion-col>
-                            <button ion-button   block color="secondary" (click)="orderAccept('driver_accept',item)">    Accept  </button>
+                            <button ion-button   block color="secondary" (click)="orderAccept('shop_accept',item)">    Accept  </button>
                         </ion-col>
                     </ion-row>
-                    <button *ngIf="item.order.driver_accept==1" ion-button clear   block color="secondary"  >    Accepted  </button>
+                    <button *ngIf="item.order.shop_accept==1" ion-button clear   block color="secondary"  >    Accepted  </button>
 
                 </ion-item>
-                <ion-list>
-
-                        <ion-item>
-                          <ion-label>Order Picked</ion-label>
-                          <ion-toggle (ionChange)="orderUpdate('driver_picked',item)" [(ngModel)]="item.order.driver_picked"></ion-toggle>
-                        </ion-item>
-                      
-                        <ion-item>
-                          <ion-label>Payment received</ion-label>
-                          <ion-toggle (ionChange)="orderUpdate('payment_recived',item)" [(ngModel)]="item.order.payment_recived"></ion-toggle>
-                        </ion-item>
-                      
-                        <ion-item>
-                          <ion-label>Order delivered</ion-label>
-                          <ion-toggle (ionChange)="orderUpdate('user_received',item)" [(ngModel)]="item.order.user_received"></ion-toggle>
-                        </ion-item>
-                      
-                      </ion-list>
                 
             </div>
         </ion-list> 

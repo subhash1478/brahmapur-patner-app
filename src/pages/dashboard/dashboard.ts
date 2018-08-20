@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams,AlertController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams,AlertController, MenuController } from 'ionic-angular';
 import { UtilityProvider } from '../../providers/utility/utility';
 import { ServicesProvider } from '../../providers/services/services';
 import {   Input } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
-
+import { Config } from '../../config';
+ 
 export interface CountdownTimer {
   seconds: number
   secondsRemaining: number;
@@ -31,10 +32,11 @@ export class DashboardPage {
   private fixTransform;
   seconds: number;
   error_message: string;
-  constructor(  public sanitizer:DomSanitizer,public alertCtrl:AlertController,
+  constructor(  public sanitizer:DomSanitizer,public alertCtrl:AlertController,    public menu:MenuController,
+
     public utility: UtilityProvider, public navCtrl: NavController, 
     public navParams: NavParams, public _services: ServicesProvider) {
-      if(localStorage.getItem('token')!=null){
+      if(localStorage.getItem('userdetails')!=null){
         let user=JSON.parse(localStorage.getItem('userdetails'));
         this.loggedInid=user._id
         
@@ -43,29 +45,69 @@ export class DashboardPage {
     }
     
     ngOnInit() {
-      this.initTimer();
+      let data = {
+        devicesid: localStorage.getItem('devices_token'),
+        userid: Config.USER._id,
+        user_type:'partner',
+      }
+    this._services.saveDevicesToken(data).subscribe((response)=>{
+    console.log(response);
+    
+    })
+let shopid=[]
       
       let obj={
         id: this.loggedInid,
-        status:0,
-        driver_accept:0
+    
       }
-      this._services.getOrderList(obj).subscribe((response)=>{
+
+      this._services.getUserShop(obj).subscribe((response)=>{
         
-        console.log(response.response.data);
+         let result=response.response.data
+        for (let index = 0; index < result.length; index++) {
+          const element = result[index];
+          shopid.push(element.id)
+
+        }
+        let data={
+          id: shopid.toString(),
+         type:'partner',
+         status:0
+        }
+  
+        console.log(data);
         
-        this.productList=response.response.data;
-        
-       // this.startTimer()
-        
+        this._services.getNewOrder(data).subscribe((response)=>{
+          
+          console.log(response.response.data);
+          
+          this.productList=response.response.data;
+          
+         // this.startTimer()
+          
+          
+        },(error)=>{
+          console.log(error);
+          
+  
+          this.error_message='No new task'
+        })
         
       },(error)=>{
         console.log(error);
         
 
-        this.error_message='No new task'
-      })
+       })
+       console.log(shopid);
+       
+
+
+      this.menu.enable(true);
+      this.initTimer();
+      
+
     }
+    
     
     hasFinished() {
       return this.timer.hasFinished;

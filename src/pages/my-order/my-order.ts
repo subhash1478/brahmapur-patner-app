@@ -19,6 +19,7 @@ export class MyOrderPage {
   loggedInid: any;
   order: any[];
   productList: any[];
+  error_message: string;
   constructor(
   
     public utility: UtilityProvider, public navCtrl: NavController, 
@@ -32,19 +33,58 @@ export class MyOrderPage {
     }
 
   ionViewDidLoad() {
-  // this._services.
-  this._services.getOrderList( this.loggedInid).subscribe((response)=>{
-        
 
-     this.productList=response.response.data;
-      
-    
-    
-             
-          },(error)=>{
-            console.log(error);
+ 
+      let shopid=[]
             
-          })
+            let obj={
+              id: this.loggedInid,
+          
             }
-
+      
+            this._services.getUserShop(obj).subscribe((response)=>{
+              
+               let result=response.response.data
+              for (let index = 0; index < result.length; index++) {
+                const element = result[index];
+                shopid.push(element.id)
+      
+              }
+              let data={
+                id: shopid.toString(),
+               type:'partner',
+               status:1
+              }
+        
+              console.log(data);
+              
+              this._services.getNewOrder(data).subscribe((response)=>{
+                
+                console.log(response.response.data);
+                
+                this.productList=response.response.data;
+                
+               // this.startTimer()
+                
+                
+              },(error)=>{
+                console.log(error);
+                
+        
+                this.error_message='No new task'
+              })
+              
+            },(error)=>{
+              console.log(error);
+              
+      
+             })
+             console.log(shopid);
+             
+      
+ 
+            
+      
+          }
+           
 }
