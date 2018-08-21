@@ -45,19 +45,19 @@ export class UtilityProvider {
   }
 
 messageToast(data) {
-  let toast = this.toastCtrl.create({
-    message:data.msg,
-    duration: data.duration,
-    position: data.position,
-    showCloseButton: true,
-    closeButtonText: 'Got it!',
-    dismissOnPageChange: true,
-    cssClass: "toast-success"
-
-  });
-
- 
-
-  toast.present();
+  if (this.platform.is('core') || this.platform.is('mobileweb')) {
+    const toast = this.toastCtrl.create({
+      message: data.msg,
+      duration: data.duration,
+      position:  data.position,
+    });
+    toast.present();
+  } else {
+    this.toast.show(data.msg, data.duration, 'center').subscribe(
+      toast => {
+        console.log(toast);
+      }
+    );
+  }
 }
 }

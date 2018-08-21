@@ -4,13 +4,19 @@
             <ion-icon name="menu"></ion-icon>
         </button>
         <ion-title>Task Assign</ion-title>
+        <ion-buttons end>
+            <button ion-button clear   >
+                    {{ timer }}  Refresh        
+
+             </button>
+            
+          </ion-buttons>
     </ion-navbar>
 </ion-header>
 <ion-content  >
  
     <ion-list>
-        
-            
+         
         <h1 text-center>    {{error_message}}
             </h1>
         <div   *ngFor="let item of productList;let i =index">

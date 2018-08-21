@@ -1,261 +1,242 @@
-import { Component } from '@angular/core';
+import { Component} from '@angular/core';
 import { IonicPage, NavController, NavParams,AlertController, MenuController } from 'ionic-angular';
 import { UtilityProvider } from '../../providers/utility/utility';
 import { ServicesProvider } from '../../providers/services/services';
 import {   Input } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Config } from '../../config';
- 
-export interface CountdownTimer {
-  seconds: number
-  secondsRemaining: number;
-  runTimer: boolean;
-  hasStarted: boolean;
-  hasFinished: boolean;
-  displayTime: string;
-}
+import { Subscription } from 'rxjs/Subscription';
+import { Observable } from 'rxjs/Rx';
+
 
 @IonicPage()
 @Component({
   selector: 'page-dashboard',
   templateUrl: 'dashboard.html',
 })
-export class DashboardPage {
+export class DashboardPage   {
+  timer: number = 30;
+  intervalId: number = -1;
+
   order: any[];
   productList: any[];
   loggedInid: any;
-  @Input() timeInSeconds: number=120;
-  timer: CountdownTimer;
-  private increment;
-  private transform;
-  private percent;
-  private fixTransform;
-  seconds: number;
+  
   error_message: string;
+  shopid: any=[];
+  counter: number;
   constructor(  public sanitizer:DomSanitizer,public alertCtrl:AlertController,    public menu:MenuController,
-
+    
     public utility: UtilityProvider, public navCtrl: NavController, 
     public navParams: NavParams, public _services: ServicesProvider) {
       if(localStorage.getItem('userdetails')!=null){
         let user=JSON.parse(localStorage.getItem('userdetails'));
         this.loggedInid=user._id
-        
+        this.saveDevicesToken()
       }
-      this.seconds=60
+    }
+    start() {
+      this.timer=30
+      this.intervalId = setInterval(() => {
+        this.timeIt()
+      }, 1000);   
+    
+      if (this.timer <= 0) {
+        this.stop();
+      }
+    
     }
     
-    ngOnInit() {
+    stop() {
+       clearInterval(this.intervalId);
+       this.intervalId = -1;
+    }
+    
+    startStop() {
+      if(this.intervalId == -1) {
+        this.start();
+        
+      }  else {
+        this.stop();
+ 
+      }
+    }
+    
+    timeIt() {
+      console.log(this.timer );
+      
+     this.timer--;
+     if (this.timer == 0) {
+       this.start()
+       this.getUsertask()
+
+       clearInterval(this.intervalId);
+     }
+    }
+    
+    convertSeconds(s) {
+      var minutes = Math.floor(s / 60);
+      var seconds = (s % 60)
+      var milliseconds = s;
+    
+     
+    }
+    
+    ngOnInit(){
+      
+      let shopidlist=[]
+      let obj={
+        id: this.loggedInid,
+        
+      }
+      this._services.getUserShop(obj).subscribe((response)=>{
+        
+        let result=response.response.data
+        for (let index = 0; index < result.length; index++) {
+          const element = result[index];
+          shopidlist.push(element.id)
+          
+        }
+        
+        this.shopid=shopidlist
+        localStorage.setItem('shopidlist',JSON.stringify(this.shopid))
+        console.log(this.shopid);
+        
+      },(error)=>{
+        console.log(error);
+        
+        
+      })
+      
+      this.start()
+    }
+    
+    ionViewDidLeave() {
+      
+       console.log('ionViewDidLeave');
+    }
+    ionViewDidEnter() {
+      
+      console.log('ionViewDidEnter');
+      this.getUsertask()
+
+      this.menu.enable(true);
+      
+      
+    }
+    
+    saveDevicesToken(){
       let data = {
         devicesid: localStorage.getItem('devices_token'),
         userid: Config.USER._id,
         user_type:'partner',
       }
-    this._services.saveDevicesToken(data).subscribe((response)=>{
-    console.log(response);
-    
-    })
-let shopid=[]
-      
-      let obj={
-        id: this.loggedInid,
-    
-      }
-
-      this._services.getUserShop(obj).subscribe((response)=>{
+      this._services.saveDevicesToken(data).subscribe((response)=>{
+        console.log(response);
         
-         let result=response.response.data
-        for (let index = 0; index < result.length; index++) {
-          const element = result[index];
-          shopid.push(element.id)
+      })
+    }
+    
+    
+    getUsertask(){
+      this.productList=[]
+      this.error_message==''
+      let shoplist=JSON.parse(localStorage.getItem('shopidlist'))
+      
+      console.log(shoplist.toString());
+      
+      let data={
+        id: shoplist.toString(),
+        type:'partner',
+        status:0
+      }
+      
+      console.log(data);
+ 
 
-        }
-        let data={
-          id: shopid.toString(),
-         type:'partner',
-         status:0
-        }
-  
-        console.log(data);
         
         this._services.getNewOrder(data).subscribe((response)=>{
-          
-          console.log(response.response.data);
+        
           
           this.productList=response.response.data;
           
-         // this.startTimer()
+          // this.startTimer()
           
-          
+           
         },(error)=>{
           console.log(error);
           
-  
+          
           this.error_message='No new task'
         })
         
-      },(error)=>{
-        console.log(error);
-        
-
-       })
-       console.log(shopid);
-       
-
-
-      this.menu.enable(true);
-      this.initTimer();
-      
-
-    }
-    
-    
-    hasFinished() {
-      return this.timer.hasFinished;
-    }
-    initProgressBar() {
-      this.percent = 100;
-      this.increment = 180 / 100;
-      const progress = 'rotate(' + this.increment * this.percent + 'deg)';
-      this.transform = this.sanitizer.bypassSecurityTrustStyle(progress);
-      this.fixTransform = this.sanitizer.bypassSecurityTrustStyle(progress);
-    }
-    
-    initTimer() {
-      this.initProgressBar();
-      if (!this.timeInSeconds) { this.timeInSeconds = 0; }
-      
-      this.timer = <CountdownTimer>{
-        seconds: this.timeInSeconds,
-        runTimer: false,
-        hasStarted: false,
-        hasFinished: false,
-        secondsRemaining: this.timeInSeconds
-      };
-      
-      this.timer.displayTime = this.getSecondsAsDigitalClock(this.timer.secondsRemaining);
-    }
-    
-    play(){
-      console.log('play');
-      
-      var audio = new Audio('./assets/alarm.mp3');
-      
-      let a=audio.play();
-      console.log(a);
-      
-    }
-    startTimer() {
-      this.timer.hasStarted = true;
-      this.timer.runTimer = true;
-      this.timerTick();
-    }
-    
-    pauseTimer() {
-      
-      this.timer.runTimer = false;
-    }
-    
-    resumeTimer() {
-      this.startTimer();
-    }
-    
-    timerTick() {
-      this.play()
-      
-      setTimeout(() => {
-        if (!this.timer.runTimer) { return; }
-        this.timer.secondsRemaining--;
-        this.timer.displayTime = this.getSecondsAsDigitalClock(this.timer.secondsRemaining);
-        this.percent = this.timer.secondsRemaining / this.timer.seconds * 100;
-        this.increment = 180 / 100;
-        const progress = 'rotate(' + this.increment * this.percent + 'deg)';
-        this.transform = this.sanitizer.bypassSecurityTrustStyle(progress);
-        this.fixTransform = this.sanitizer.bypassSecurityTrustStyle(progress);
-        if (this.timer.secondsRemaining > 0) {
-          this.timerTick();
-          
-        } else {
-          this.timer.hasFinished = true;
+        let msg={
+          msg:'Refresh',
+          duration:1000
         }
-        
-      }, 1000);
-    }
-    
-    getSecondsAsDigitalClock(inputSeconds: number) {
-      const secNum = parseInt(inputSeconds.toString(), 10); // don't forget the second param
-      const hours = Math.floor(secNum / 3600);
-      const minutes = Math.floor((secNum - (hours * 3600)) / 60);
-      const seconds = secNum - (hours * 3600) - (minutes * 60);
-      let hoursString = '';
-      let minutesString = '';
-      let secondsString = '';
-      hoursString = (hours < 10) ? '0' + hours : hours.toString();
-      minutesString = (minutes < 10) ? '0' + minutes : minutes.toString();
-      secondsString = (seconds < 10) ? '0' + seconds : seconds.toString();
-      return hoursString + ':' + minutesString + ':' + secondsString;
-    }
-    
-    orderAccept(type,item){
+        this.utility.messageToast(msg)
+       }
+       
       
-      let alert = this.alertCtrl.create({
-        title: `Confirm ${type}`,
-        message: `Do you want to ${type} this Order`,
-        buttons: [
-          {
-            text: 'Cancel',
-            role: 'cancel',
-            handler: () => {
-              console.log('Cancel clicked');
-
+      orderAccept(type,item){
+        
+        let alert = this.alertCtrl.create({
+          title: `Confirm ${type}`,
+          message: `Do you want to ${type} this Order`,
+          buttons: [
+            {
+              text: 'Cancel',
+              role: 'cancel',
+              handler: () => {
+                console.log('Cancel clicked');
+                
+              }
+            },
+            {
+              text: 'OK',
+              handler: () => {
+                console.log('Buy clicked');
+                this.driverOrderAccept(type,item)
+                
+              }
             }
-          },
-          {
-            text: 'OK',
-            handler: () => {
-              console.log('Buy clicked');
-              this.driverOrderAccept(type,item)
-              
-            }
-          }
-        ]
-      });
-      alert.present();
-      
-    }
-    driverOrderAccept(type,item){
-      
-      let obj={
-         id:item.order.id,
-        type:type,
-        value:1
+          ]
+        });
+        alert.present();
+        
       }
-      console.log(obj);
+      driverOrderAccept(type,item){
+        
+        let obj={
+          id:item.order.id,
+          type:type,
+          value:1
+        }
+        console.log(obj);
+        
+        this._services.task(obj).subscribe((response)=>{
+          
+          let result=response.response.data;
+          console.log(response);
+          this.getUsertask()
+        })
+      }
       
-      this._services.task(obj).subscribe((response)=>{
+      orderUpdate(type,item){
         
-        let result=response.response.data;
-        console.log(response);
-        this.ngOnInit()
+        let obj={
+          id:item.order.id,
+          type:type,
+          value:item.order[type]
+        }
+        console.log(obj);
         
-      })
+        this._services.task(obj).subscribe((response)=>{
+          
+          let result=response.response.data;
+          console.log(response);
+          
+        })
+      }
     }
     
-    orderUpdate(type,item){
-      
-      let obj={
-         id:item.order.id,
-        type:type,
-        value:item.order[type]
-      }
-      console.log(obj);
-      
-      this._services.task(obj).subscribe((response)=>{
-        
-        let result=response.response.data;
-        console.log(response);
-        this.ngOnInit()
-        
-      })
-    }
-  }
-  
