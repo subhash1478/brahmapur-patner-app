@@ -20,29 +20,29 @@ export class MyApp {
 
       platform.ready().then(() => {
  
-        //   this.oneSignal.startInit("58028d01-d059-4cf1-b6c6-0d99812dfe24", "977511232376")
+          this.oneSignal.startInit("58028d01-d059-4cf1-b6c6-0d99812dfe24", "977511232376")
 
 
-        // this.oneSignal.inFocusDisplaying(this.oneSignal.OSInFocusDisplayOption.Notification);
+        this.oneSignal.inFocusDisplaying(this.oneSignal.OSInFocusDisplayOption.Notification);
         
-        // this.oneSignal.enableVibrate(true)
-        // this.oneSignal.enableSound(true)
-        //  this.oneSignal.handleNotificationReceived().subscribe(() => {
-        //  // do something when notification is received
-        // });
+        this.oneSignal.enableVibrate(true)
+        this.oneSignal.enableSound(true)
+         this.oneSignal.handleNotificationReceived().subscribe(() => {
+         // do something when notification is received
+        });
         
-        // this.oneSignal.handleNotificationOpened().subscribe(() => {
-        //   // do something when a notification is opened
-        // });
+        this.oneSignal.handleNotificationOpened().subscribe(() => {
+          // do something when a notification is opened
+        });
 
-        // this.oneSignal.getIds().then(function(data){
-        //   console.log(data);
+        this.oneSignal.getIds().then(function(data){
+          console.log(data);
 
-        //  localStorage.setItem('devices_token',data.userId)
+         localStorage.setItem('devices_token',data.userId)
           
-        // })
+        })
         
-        // this.oneSignal.endInit();
+        this.oneSignal.endInit();
     
        
 
